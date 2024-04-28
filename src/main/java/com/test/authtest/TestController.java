@@ -10,7 +10,7 @@ public class TestController {
 	
 	@GetMapping
 	public String test() {
-		return "test success";
+		return "Narasimha is greatest of all time :)";
 	}
 
 }
