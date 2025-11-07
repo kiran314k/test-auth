@@ -1,12 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - kiran-initial-project
+name: Build and deploy Spring Boot app to Azure Web App - kiran314authentication
 
 on:
   push:
     branches:
-      - main
+      - main12
   workflow_dispatch:
 
 jobs:
@@ -19,27 +19,37 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Java version
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
+          distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package spring-boot:repackage
+
+      - name: Rename jar file
+        run: |
+          cd target
+          mv *.jar auth-test.jar
+
+      - name: Prepare deployment
+        run: |
+          mkdir -p artifacts
+          cp target/auth-test.jar artifacts/
+          cp src/main/resources/web.config artifacts/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: artifacts
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -47,7 +57,6 @@ jobs:
         with:
           name: java-app
           path: deploy
-
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -60,6 +69,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'kiran-initial-project'
+          app-name: 'kiran314authentication'
           slot-name: 'Production'
-          package: '*.jar'
+          package: deploy
+
+

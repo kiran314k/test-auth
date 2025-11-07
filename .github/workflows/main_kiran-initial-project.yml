@@ -26,11 +26,17 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deployment
+          cp target/*.jar deployment/auth-test.jar
+          cp src/main/resources/web.config deployment/
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: deployment/
 
   deploy:
     runs-on: windows-latest
@@ -62,5 +68,4 @@ jobs:
         with:
           app-name: 'kiran314authentication'
           slot-name: 'Production'
-          package: '*.jar'
-          
+          package: './deploy'
