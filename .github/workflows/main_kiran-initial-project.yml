@@ -60,7 +60,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'kiran-initial-project'
+          app-name: 'kiran314authentication'
           slot-name: 'Production'
           package: '*.jar'
           
