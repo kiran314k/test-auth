@@ -6,7 +6,7 @@ name: Build and deploy Spring Boot app to Azure Web App - kiran314authentication
 on:
   push:
     branches:
-      - main
+      - main12
   workflow_dispatch:
 
 jobs:
