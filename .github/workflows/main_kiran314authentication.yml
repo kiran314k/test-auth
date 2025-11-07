@@ -32,13 +32,17 @@ jobs:
           cd target
           mv *.jar auth-test.jar
 
+      - name: Prepare deployment
+        run: |
+          mkdir -p artifacts
+          cp target/auth-test.jar artifacts/
+          cp src/main/resources/web.config artifacts/
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: |
-            target/auth-test.jar
-            src/main/resources/web.config
+          path: artifacts
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,7 +56,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
-      
+          path: deploy
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -66,6 +71,6 @@ jobs:
         with:
           app-name: 'kiran314authentication'
           slot-name: 'Production'
-          package: '.'
+          package: deploy
 
 
