@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure App Service External Access Test</title>
+    <script>
+        async function testEndpoints() {
+            const baseUrl = 'https://kiran314authentication.azurewebsites.net';
+            const endpoints = ['/', '/health', '/ping', '/test-external'];
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+
+            for (const endpoint of endpoints) {
+                try {
+                    const start = performance.now();
+                    const response = await fetch(baseUrl + endpoint);
+                    const data = await response.text();
+                    const time = (performance.now() - start).toFixed(2);
+
+                    results.innerHTML += `
+                        <div class="result success">
+                            <h3>✅ ${endpoint}</h3>
+                            <p>Status: ${response.status}</p>
+                            <p>Time: ${time}ms</p>
+                            <pre>${data}</pre>
+                        </div>
+                    `;
+                } catch (error) {
+                    results.innerHTML += `
+                        <div class="result error">
+                            <h3>❌ ${endpoint}</h3>
+                            <p>Error: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #e6ffe6; border: 1px solid #99ff99; }
+        .error { background: #ffe6e6; border: 1px solid #ff9999; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        button { padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Azure App Service External Access Test</h1>
+    <button onclick="testEndpoints()">Test All Endpoints</button>
+    <div id="results"></div>
+</body>
+</html>
