@@ -7,7 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.test.authtest", "com.test.authtest.controller"})
+@ComponentScan(basePackages = {"com.test.authtest", "com.test.authtest.controller", "com.test.authtest.config"})
 public class AuthTestApplication extends SpringBootServletInitializer {
 
     @Override
